@@ -1,0 +1,47 @@
+# Тестовое задание Wargaming Forge (Backend)
+
+Для работы скрипта предполагается, что сервер PostgreSQL уже запущен и доступен через порт 0.0.0.0:5432, база данных с необходимыми таблицами уже создана:
+              List of relations [wg_forge_db]
+	 Schema |      Name       | Type  |  Owner   
+	--------+-----------------+-------+----------
+ 	public | cat_colors_info | table | wg_forge
+ 	public | cats            | table | wg_forge
+ 	public | cats_stat       | table | wg_forge
+
+Параметры подключения к базе данных по умолчанию:
+	HOST: localhost
+	PORT: 5432
+	DBNAME: wg_forge_db
+	USERNAME: wg_forge
+	PASSWORD: 42a
+
+В случае, если параметры подключения отличаются, их можно предварительно задать с помощью аргументов командной строки:
+	см. forge_tasks.py -h
+
+Для работы скрипта необходимо предварительно установить пакет psycopg2-binary для работы с БД PostgreSQL:
+	pip install psycopg2-binary
+
+Все остальные модули входят в стандартную библиотеку python версии 3*
+Cписок импортируемых модулей:
+
+	psycopg2		2.7.7
+	psycopg2.extras
+	json			2.0.9
+	http.server		0.6
+	urllib
+	argparse		1.1
+	time
+	statistics
+
+HTTP-сервер по умолчанию прослушивает порт 0.0.0.0:8080. Если порт занят, его можно переопределить через аргументы командной строки:
+	см. forge_tasks.py -h
+	
+Запуск скрипта одним из способов:
+	chmod u+x forge_tasks.py && ./forge_tasks.py
+	python forge_tasks.py
+	python3 forge_tasks.py
+
+Скрипт протестирован на Python 3.7.1 [gcc (GCC) 8.2.1 20181127] x86_64 GNU/Linux
+	
+P.S. Не более 10 запросов в секунду (остальные отклоняются с 429 кодом ответа). Посмотреть 6-задание можно с помощью такого вот костыля:
+for i in {1..100};do curl -s -o /dev/null -w "time (s): `date +%S.%N` response code:%{http_code} request: $i\n" http://localhost:8080/ping;done
